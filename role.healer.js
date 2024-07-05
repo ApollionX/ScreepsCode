@@ -8,17 +8,17 @@ var roleHealer = {
         if(creep.memory.patient)
         {
             var patient = Game.getObjectById(creep.memory.patient);
-            creep.say('❤  Healing' + patient.structureType);
+            //creep.say('❤  Healing' + patient.structureType);
             
             if (creep.memory.patient == null ||creep.store[RESOURCE_ENERGY] == 0 || (patient.hits == patient.hitsMax))
             {
-                console.log("HEALED!");
+                //console.log("HEALED!");
                 creep.memory.patient=null;
             }
             else
             {
                 // Heal patient
-                console.log('Heading to: ' + patient);
+                //console.log('Heading to: ' + patient);
                 if(creep.repair(patient) != OK) 
                 {
                     creep.moveTo(patient, {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -27,7 +27,7 @@ var roleHealer = {
 	    }
 	    else
 	    {
-	        creep.say('🔄 harvest');
+	        //creep.say('🔄 harvest');
 	        
 	        if (creep.store.getFreeCapacity() == 0)
 	        {

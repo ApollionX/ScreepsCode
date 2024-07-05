@@ -1,12 +1,13 @@
+var globals = require('globals');
+const makeRoads = false;
+
 var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-	    if(creep.store.getFreeCapacity() > 0) {
-            var source = creep.pos.findClosestByPath(creep.room.find(FIND_SOURCES));
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
+	    if(creep.store.getFreeCapacity() > 0) 
+        {
+            globals.mineClosestNode(creep);
         }
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
@@ -30,6 +31,12 @@ var roleHarvester = {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
+            }
+            
+            // drop road everywhere you go
+            if (makeRoads)
+            {
+                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
             }
         }
 	}
