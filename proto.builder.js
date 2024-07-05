@@ -12,7 +12,7 @@ const builderPrototype = {
         const base = bases[0];
         //console.log('Extensions: ' + extensions.length + ', ConSites: ' + conSites.length);
             
-        if(extensions.length < 5 && conSites.length < 1 && base)
+        if(extensions.length < 10 && conSites.length < 1 && base)
         {
             const buildSpots = creep.room.lookForAtArea(LOOK_TERRAIN, base.pos.y - 2, base.pos.x - 2, base.pos.y, base.pos.x + 2, true);
             //console.log(buildSpots);
@@ -40,7 +40,7 @@ const builderPrototype = {
         const base = bases[0];
         //console.log('Containers: ' + containers.length + ', ConSites: ' + conSites.length);
             
-        if(containers.length < 5 && conSites.length < 1 && base)
+        if(containers.length < 3 && conSites.length < 1 && base)
         {
             const buildSpots = creep.room.lookForAtArea(LOOK_TERRAIN, base.pos.y - 2, base.pos.x - 2, base.pos.y, base.pos.x + 2, true);
             //console.log(buildSpots);

@@ -33,36 +33,32 @@ const globals =
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
-                {memory: {role: 'harvester'}});    
-            console.log('Harvesters: ' + harvesters.length);
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+                {memory: {role: 'harvester'}});
             makeNew=true;
         }
         else if(builders.length < 1)
         {
             var newName = 'Builder' + Game.time;
             console.log('Spawning new builder: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});   
-            console.log('Builders: ' + builders.length);
             makeNew=true;
         }
         else if(upgraders.length < 1)
         {
             var newName = 'Upgrader' + Game.time;
             console.log('Spawning new upgrader: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'upgrader'}});  
-            console.log('Upgraders: ' + upgraders.length);
             makeNew=true;
         }
         else if(healers.length < 1)
         {
             var newName = 'Healer' + Game.time;
             console.log('Spawning new healer: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'healer'}});  
-            console.log('Healers: ' + healers.length);
             makeNew=true;
         }
         
