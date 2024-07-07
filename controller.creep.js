@@ -5,116 +5,66 @@ var creepController = {
     /** @param {Room} room **/
     run: function(creep)
     {
-        // This is where we do things once per creep
+        if (!creep)
+            return;
 
-        console.log('Running Creep:' + creep)
+        // This is where we do things once per creep
+        var shouldFill = creep.shouldFill();
+
+        //console.log('Running Creep:' + creep)
         // Work creep work
         if(creep.memory.role == 'harvester')
         {
-            if(creep.memory.isFilling)
+            if(shouldFill)
             {
-                creep.mineClosestEnergy();
-                if(creep.store.getFreeCapacity() == 0)
-                    creep.memory.isFilling = false;
+                if(!creep.mineClosestEnergy())
+                    creep.memory.filling = false
             }
             else 
             {
                 // try dump energy
                 if(!creep.tryDumpEnergy())
                 {
-                    creep.tryBuildStructure();
+                    if(!creep.tryBuildStructure())
+                    {
+                        creep.moveAndUpgradeController();
+                    }
                 }
-                
-                if(creep.store.getUsedCapacity() == 0)
-                    creep.memory.isFilling = true;
             }
         }
         else if(creep.memory.role == 'upgrader')
         {
-            if(creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) 
-            {
-                creep.memory.upgrading = false;
-                creep.say('🔄 harvest');
-            }
-            
-            if(!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) 
-            {
-                creep.memory.upgrading = true;
-                creep.say('⚡ upgrade');
-            }
-    
-            if(creep.memory.upgrading) 
-            {
-                creep.moveAndUpgradeController();
-            }
-            else 
+            if(shouldFill) 
             {
                 creep.getEnergyFromContainer();
+            }
+            else
+            {
+                creep.moveAndUpgradeController();
             }
         }
         else if(creep.memory.role == 'builder')
         {
-            if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
-                creep.memory.building = false;
-                creep.say('🔄 harvest');
-            }
-            if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
-                creep.memory.building = true;
-                creep.say('🚧 build');
-            }
-
-            if(creep.memory.building) 
+            if(shouldFill)
             {
-                creep.tryBuidStructure();
+                creep.mineClosestEnergy();
             }
             else
             {
-                creep.mineClosestEnergy();
+                creep.tryBuidStructure();
             }
         }
         else if(creep.memory.role == 'healer')
         {
-            if(creep.memory.patient)
+            if(shouldFill)
             {
-                var patient = Game.getObjectById(creep.memory.patient);
-                //creep.say('❤  Healing' + patient.structureType);
-                
-                if (creep.memory.patient == null || creep.store[RESOURCE_ENERGY] == 0)
-                {
-                    //console.log("HEALED!");
-                    creep.memory.patient=null;
-                }
-                else
-                {
-                    // Heal patient
-                    //console.log('Heading to: ' + patient);
-                    if(creep.repair(patient) != OK) 
-                    {
-                        creep.moveTo(patient, {visualizePathStyle: {stroke: '#ffaa00'}});
-                    }
-                    
-                    if(patient.hits == patient.hitsMax)
-                    {
-                        const targets = creep.room.find(FIND_STRUCTURES);
-                        targets.sort((a,b) => (b.hitsMax - b.hits) - (a.hitsMax - a.hits));
-                        creep.memory.patient = targets[0].id;
-                    }
-                }
+                console.log('weird');
+                creep.mineClosestEnergy();
             }
             else
             {
-                //creep.say('🔄 harvest');
-                
-                if (creep.store.getFreeCapacity() == 0)
-                {
-                    const targets = creep.room.find(FIND_STRUCTURES);
-                    targets.sort((a,b) => (b.hitsMax - b.hits) - (a.hitsMax - a.hits));
-                    creep.memory.patient = targets[0].id;
-                }
-                else
-                {
-                    creep.mineClosestEnergy();
-                }
+                console.log('normal');
+                creep.tryAndRepairSomething();
             }
         }
         else
@@ -124,10 +74,10 @@ var creepController = {
     },
     handleCreepSpawning: function(room)
     {
-        const numHarvesters = 5;
+        const numHarvesters = 4;
         const numBuilders = 0;
         const numHealers = 1;
-        const numUpgraders = 4;
+        const numUpgraders = 3;
         
         const myCreeps = room.find(FIND_MY_CREEPS);
         const spawns = room.find(FIND_MY_SPAWNS);
@@ -143,7 +93,7 @@ var creepController = {
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            hive.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+            hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'harvester'}});
             makeNew=true;
         }
@@ -159,7 +109,7 @@ var creepController = {
         {
             var newName = 'Upgrader' + Game.time;
             console.log('Spawning new upgrader: ' + newName);
-            hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+            hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'upgrader'}});  
             makeNew=true;
         }

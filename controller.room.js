@@ -1,13 +1,13 @@
 var creepController = require('controller.creep');
 
-//var structureController = require('controller.structure');
+var structureController = require('controller.structure');
 
 var roomController = {
 
     /** @param {Room} room **/
     run: function(room) 
     {
-        console.log('Running room: ' + room);
+        //console.log('Running room: ' + room);
         // This is where we do things once per room
 
 
@@ -34,7 +34,8 @@ var roomController = {
     },
     handleAttackers: function(room)
     {
-
+        const towers = room.find(FIND_MY_STRUCTURES, {filter: { structureType: STRUCTURE_TOWER }});
+        structureController.singleTower(towers[0]);
     },
     makeRoadBetweenPoints: function(pos1, pos2)
     {
