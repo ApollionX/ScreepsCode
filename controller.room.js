@@ -35,6 +35,15 @@ var roomController = {
     handleAttackers: function(room)
     {
 
+    },
+    makeRoadBetweenPoints: function(pos1, pos2)
+    {
+        let path = pos1.findPathTo(pos2, { ignoreCreeps: true });
+        for (let i = 0; i < path.length; i++) 
+        {
+            let pos = new RoomPosition(path[i].x, path[i].y, pos1.roomName);
+            pos.createConstructionSite(STRUCTURE_ROAD);
+        }
     }
 };
 

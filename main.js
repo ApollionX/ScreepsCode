@@ -1,5 +1,5 @@
 var roomController = require('controller.room');
-
+ 
 module.exports.loop = function ()
 {
     let ownedRoomNames = Object.keys(Game.rooms);

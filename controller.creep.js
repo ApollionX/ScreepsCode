@@ -83,7 +83,7 @@ var creepController = {
             }
             else 
             {
-                globals.getEnergyFromContainer(creep);
+                creep.getEnergyFromContainer();
             }
         }
         else if(creep.memory.role == 'builder')
@@ -181,7 +181,7 @@ var creepController = {
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            hive.spawnCreep([WORK,WORK,CARRY,MOVE], newName, 
+            hive.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'harvester'}});
             makeNew=true;
         }
