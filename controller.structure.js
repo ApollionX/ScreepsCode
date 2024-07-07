@@ -5,7 +5,17 @@ var structureController = {
     {
     },
     handleRoomBuilding: function(room)
-    {   
+    {  
+        if (room.name == 'W8N2')
+        {
+            //this.makeRoadBetweenPoints(room.)
+            const bases = room.find(FIND_MY_STRUCTURES, {
+                filter: { structureType: STRUCTURE_SPAWN }
+                });
+            const sources = room.find(FIND_SOURCES_ACTIVE);
+            
+            //this.makeRoadBetweenPoints(bases[0].pos, room.controller);
+        }
     },
     singleTower: function(tower) 
     {  
@@ -69,6 +79,15 @@ var structureController = {
                 }
                 //console.log('check: ' + i);
             }
+        }
+    },
+    makeRoadBetweenPoints: function(pos1, pos2)
+    {
+        let path = pos1.findPathTo(pos2, { ignoreCreeps: true });
+        for (let i = 0; i < path.length; i++) 
+        {
+            let pos = new RoomPosition(path[i].x, path[i].y, pos1.roomName);
+            pos.createConstructionSite(STRUCTURE_ROAD);
         }
     }
 };

@@ -37,21 +37,23 @@ Creep.prototype.getEnergyFromContainer = function()
         FIND_STRUCTURES, 
         {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 0;}}
     );
-    if(containersWithEnergy > 0)
+    if(containersWithEnergy.length > 0)
     {
-        var containerWithEnergy = containersWithEnergy[0]; 
+        let containerWithEnergy = containersWithEnergy[0]; 
         this.moveToTarget(containerWithEnergy.pos);
         this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
         return true;
     }
     else
+    {
         return false;
+    }
 };
 
 Creep.prototype.moveToTarget = function (target)
 {
     let distance = this.pos.getRangeTo(target);
-    let optimizeValue = 0;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
+    let optimizeValue = 2;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
 
     if(distance > 1)
         this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ffaa00'}});
@@ -83,7 +85,7 @@ Creep.prototype.tryDumpEnergy = function()
             }
         );
     }
-                
+
     if(target)
     {
         this.moveToTarget(target);

@@ -110,11 +110,16 @@ var creepController = {
         var numExplorers = 0;
 
         // Room 2
-
-
-
-
+        if (room.name == 'W8N2')
+        {
+            numHarvesters = 4;
+            numBuilders = 0;
+            numHealers = 1;
+            numUpgraders = 2;
+            numExplorers = 0;
+        }
         
+
         const myCreeps = room.find(FIND_MY_CREEPS);
         const spawns = room.find(FIND_MY_SPAWNS);
 
@@ -130,11 +135,11 @@ var creepController = {
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            if (room.controller.level > 4)
+            if (room.name == 'W8N3')
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: 'harvester'}});
             else
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: 'harvester'}});
 
             makeNew=true;
@@ -143,15 +148,19 @@ var creepController = {
         {
             var newName = 'Builder' + Game.time;
             console.log('Spawning new builder: ' + newName);
-            hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
-                {memory: {role: 'builder'}});   
+            if (room.name == 'W8N3')
+                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+                    {memory: {role: 'builder'}});   
+            else
+                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+                    {memory: {role: 'builder'}});
             makeNew=true;
         }
         else if(upgraders.length < numUpgraders)
         {
             var newName = 'Upgrader' + Game.time;
             console.log('Spawning new upgrader: ' + newName);
-            if (room.controller.level > 4)
+            if (room.name == 'W8N3')
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: 'upgrader'}});
             else
@@ -163,7 +172,7 @@ var creepController = {
         {
             var newName = 'Healer' + Game.time;
             console.log('Spawning new healer: ' + newName);
-            if (room.controller.level > 4)
+            if (room.name == 'W8N3')
                 hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: 'healer'}});  
             else
@@ -176,7 +185,7 @@ var creepController = {
         {
             var newName = 'Explorer' + Game.time;
             console.log('Spawning new Explorer: ' + newName);
-            if (room.controller.level > 3)
+            if (room.name == 'W8N3')
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: 'explorer'}});  
             makeNew=true;

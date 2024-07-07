@@ -16,7 +16,7 @@ var roomController = {
             creepController.handleCreepSpawning(room);
 
         // Check if room needs to build anything
-        //structureController.handleRoomBuilding(room);
+        structureController.handleRoomBuilding(room);
 
         // Check if under attack
         this.handleAttackers(room);
@@ -40,15 +40,6 @@ var roomController = {
         {
             structureController.singleTower(tower);
         });
-    },
-    makeRoadBetweenPoints: function(pos1, pos2)
-    {
-        let path = pos1.findPathTo(pos2, { ignoreCreeps: true });
-        for (let i = 0; i < path.length; i++) 
-        {
-            let pos = new RoomPosition(path[i].x, path[i].y, pos1.roomName);
-            pos.createConstructionSite(STRUCTURE_ROAD);
-        }
     }
 };
 
