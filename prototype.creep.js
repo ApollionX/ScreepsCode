@@ -29,7 +29,6 @@ Creep.prototype.getEnergyFromContainer = function()
 Creep.prototype.moveToTarget = function (pos)
 {
     let distance = this.pos.getRangeTo(pos);
-    this.say("Dst: " + distance);
     this.moveTo(pos, {visualizePathStyle: {stroke: '#ffaa00'}});
 };
 
@@ -112,30 +111,30 @@ Creep.prototype.moveToAndRepair = function(patient)
 
 Creep.prototype.tryAndRepairSomething = function()
 {
-    const targets = this.room.find(FIND_STRUCTURES);
-    targets.sort((a,b) => (b.hitsMax - b.hits) - (a.hitsMax - a.hits));
-    this.memory.patient = targets[0].id;
+    if (!this.memory.patient)
+    {
+        const targets = this.room.find(FIND_STRUCTURES);
+        targets.sort((a,b) => (b.hitsMax - b.hits) - (a.hitsMax - a.hits));
+        this.memory.patient = targets[0].id;
+    }
 
     if(this.memory.patient)
     {
         var patient = Game.getObjectById(this.memory.patient);
-        //this.say('❤  Healing' + patient.structureType);
+        this.say('❤');
         
-        if (this.memory.patient == null)
+        if (!patient)
         {
             this.memory.patient=null;
         }
         else
         {
             // Heal patient
-            console.log('Heading to: ' + patient);
             this.moveToAndRepair(patient);
             
             if(patient.hits == patient.hitsMax)
             {
-                const targets = this.room.find(FIND_STRUCTURES);
-                targets.sort((a,b) => (b.hitsMax - b.hits) - (a.hitsMax - a.hits));
-                this.memory.patient = targets[0].id;
+                this.memory.patient=null;
             }
         }
     }

@@ -58,12 +58,10 @@ var creepController = {
         {
             if(shouldFill)
             {
-                console.log('weird');
                 creep.mineClosestEnergy();
             }
             else
             {
-                console.log('normal');
                 creep.tryAndRepairSomething();
             }
         }
