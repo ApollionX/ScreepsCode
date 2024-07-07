@@ -10,9 +10,10 @@ var roomController = {
         //console.log('Running room: ' + room);
         // This is where we do things once per room
 
-
+        var spawns = room.find(FIND_MY_SPAWNS);
         // Check if we need more creeps
-        creepController.handleCreepSpawning(room);
+        if(room.controller.my && spawns[0] && spawns[0].progress == spawns[0].progressTotal)
+            creepController.handleCreepSpawning(room);
 
         // Check if room needs to build anything
         //structureController.handleRoomBuilding(room);
@@ -35,7 +36,10 @@ var roomController = {
     handleAttackers: function(room)
     {
         const towers = room.find(FIND_MY_STRUCTURES, {filter: { structureType: STRUCTURE_TOWER }});
-        structureController.singleTower(towers[0]);
+        towers.forEach(tower =>
+        {
+            structureController.singleTower(tower);
+        });
     },
     makeRoadBetweenPoints: function(pos1, pos2)
     {

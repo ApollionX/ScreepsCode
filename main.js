@@ -5,7 +5,8 @@ module.exports.loop = function ()
     let ownedRoomNames = Object.keys(Game.rooms);
     ownedRoomNames.forEach(roomName =>
     {
-        //console.log('ROOMS: ' + roomName)
-        roomController.run(Game.rooms[roomName]);
+        //console.log('ROOM: ' + roomName)
+        var room = Game.rooms[roomName];
+        roomController.run(room);
     });
 };

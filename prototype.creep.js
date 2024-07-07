@@ -14,22 +14,47 @@ Creep.prototype.mineClosestEnergy = function()
     return true;
 };
 
+Creep.prototype.mineClosestEnergyToTarget = function(pos) 
+{
+    let closestSourceWithEnegry = pos.findClosestByPath(
+        FIND_SOURCES_ACTIVE, 
+        {filter: (source) => source.energy > 0}
+        );
+        
+    if (!closestSourceWithEnegry)
+        return false;
+
+    // optimize, can move then harvest
+    this.moveToTarget(closestSourceWithEnegry.pos);
+    this.harvest(closestSourceWithEnegry);
+    return true;
+};
+
 Creep.prototype.getEnergyFromContainer = function() 
 {  
-    let containerWithEnergy = this.room.find
+    let containersWithEnergy = this.room.find
     (
         FIND_STRUCTURES, 
         {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 0;}}
-    )[0];
-        
-    this.moveToTarget(containerWithEnergy.pos);
-    this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
+    );
+    if(containersWithEnergy > 0)
+    {
+        var containerWithEnergy = containersWithEnergy[0]; 
+        this.moveToTarget(containerWithEnergy.pos);
+        this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
+        return true;
+    }
+    else
+        return false;
 };
 
-Creep.prototype.moveToTarget = function (pos)
+Creep.prototype.moveToTarget = function (target)
 {
-    let distance = this.pos.getRangeTo(pos);
-    this.moveTo(pos, {visualizePathStyle: {stroke: '#ffaa00'}});
+    let distance = this.pos.getRangeTo(target);
+    let optimizeValue = 0;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
+
+    if(distance > 1)
+        this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ffaa00'}});
 };
 
 Creep.prototype.tryDumpEnergy = function()
@@ -53,7 +78,7 @@ Creep.prototype.tryDumpEnergy = function()
             {
                 filter: (structure) => 
                 { return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TOWER) &&
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && structure.progress == structure.progressTotal;
                 }
             }
         );
@@ -140,4 +165,12 @@ Creep.prototype.tryAndRepairSomething = function()
     }
 
     return this.memory.patient
+};
+
+Creep.prototype.claimRoom = function()
+{
+    var controller = this.room.controller;
+    this.moveToTarget(controller.pos);
+    this.reserveController(controller);
+    this.claimController(controller);
 };
