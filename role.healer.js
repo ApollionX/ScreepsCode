@@ -44,7 +44,7 @@ var roleHealer = {
 	        }
 	        else
 	        {
-	            globals.getEnergyFromContainer(creep);
+	            globals.mineClosestNode(creep);
 	        }
 	    }
 	}

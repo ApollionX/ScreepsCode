@@ -7,8 +7,8 @@ var roleBuilder = {
     run: function(creep) {
         var conSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
         
-        builder.checkAndBuildEnergyStorage(creep);
-        builder.checkAndBuildContiners(creep);
+        //builder.checkAndBuildEnergyStorage(creep);
+        //builder.checkAndBuildContiners(creep);
         
         
 	    if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
@@ -29,7 +29,7 @@ var roleBuilder = {
 	    }
 	    else
 	    {
-	        globals.getEnergyFromContainer(creep);
+	        globals.mineClosestNode(creep);
 	    }
 	}
 };

@@ -26,7 +26,7 @@ var roleUpgrader = {
         }
         else 
         {
-            globals.mineClosestNode(creep);
+            globals.getEnergyFromContainer(creep);
         }
 	}
 };

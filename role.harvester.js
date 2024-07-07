@@ -36,7 +36,15 @@ var roleHarvester = {
             }
             else
             {
-                creep.say('NO TARGETS');
+                //creep.say('NO TARGETS');
+                var conSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+                if(conSite) 
+                {
+                    if(creep.build(conSite) == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(conSite, {visualizePathStyle: {stroke: '#ffffff'}});
+                    }
+                }
             }
             
             if(creep.store.getUsedCapacity() == 0)

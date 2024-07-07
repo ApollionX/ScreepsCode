@@ -21,12 +21,29 @@ const globals =
             creep.moveTo(closestSourceWithEnegry, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
+    makeRoadBetweenPoints: function(pos1, pos2)
+    {
+        let path = pos1.findPathTo(pos2, { ignoreCreeps: true });
+        for (let i = 0; i < path.length; i++) 
+        {
+            let pos = new RoomPosition(path[i].x, path[i].y, pos1.roomName);
+            pos.createConstructionSite(STRUCTURE_ROAD);
+        }
+    },
+    singleTower: function(tower) 
+    {  
+        if (tower == null)
+            return;
+        const hostiles = tower.room.find(FIND_HOSTILE_CREEPS);
+        const target = tower.pos.findClosestByRange(hostiles);
+        tower.attack(target);
+    },
     spawnCreeps: function() 
     {
-        const numHarvesters = 3;
-        const numBuilders = 1;
+        const numHarvesters = 5;
+        const numBuilders = 0;
         const numHealers = 1;
-        const numUpgraders =1;
+        const numUpgraders = 4;
         
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
@@ -38,7 +55,7 @@ const globals =
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'harvester'}});
             makeNew=true;
         }
@@ -46,7 +63,7 @@ const globals =
         {
             var newName = 'Builder' + Game.time;
             console.log('Spawning new builder: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});   
             makeNew=true;
         }
@@ -54,7 +71,7 @@ const globals =
         {
             var newName = 'Upgrader' + Game.time;
             console.log('Spawning new upgrader: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'upgrader'}});  
             makeNew=true;
         }
@@ -62,7 +79,7 @@ const globals =
         {
             var newName = 'Healer' + Game.time;
             console.log('Spawning new healer: ' + newName);
-            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+            Game.spawns['TheHive'].spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'healer'}});  
             makeNew=true;
         }
