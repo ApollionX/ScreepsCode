@@ -1,7 +1,11 @@
 var structureController = {
 
     /** @param {Room} room **/
-    run: function(room) {
+    run: function(room)
+    {
+    },
+    handleRoomBuilding: function(room)
+    {   
     }
 };
 
