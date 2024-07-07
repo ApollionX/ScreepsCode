@@ -8,13 +8,13 @@ var creepController = {
         // This is where we do things once per creep
 
 
-
+        console.log('Running Creep:' + creep)
         // Work creep work
         if(creep.memory.role == 'harvester')
         {
             if(creep.memory.isFilling)
             {
-                creep.mineClosestNode();
+                creep.mineClosestEnergy();
                 if(creep.store.getFreeCapacity() == 0)
                     creep.memory.isFilling = false;
             }
@@ -57,12 +57,7 @@ var creepController = {
                 
                 if(creep.store.getUsedCapacity() == 0)
                     creep.memory.isFilling = true;
-                
-                // drop road everywhere you go
-                if (makeRoads)
-                {
-                    creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-                }
+            
             }
         }
         else if(creep.memory.role == 'upgrader')
@@ -112,7 +107,7 @@ var creepController = {
             }
             else
             {
-                creep.mineClosestNode();
+                creep.mineClosestEnergy();
             }
         }
         else if(creep.memory.role == 'healer')
@@ -156,7 +151,7 @@ var creepController = {
                 }
                 else
                 {
-                    creep.mineClosestNode();
+                    creep.mineClosestEnergy();
                 }
             }
         }
@@ -186,7 +181,7 @@ var creepController = {
         {
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
-            hive.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
+            hive.spawnCreep([WORK,WORK,CARRY,MOVE], newName, 
                 {memory: {role: 'harvester'}});
             makeNew=true;
         }
