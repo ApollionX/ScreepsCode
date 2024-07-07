@@ -7,7 +7,6 @@ var creepController = {
     {
         // This is where we do things once per creep
 
-
         console.log('Running Creep:' + creep)
         // Work creep work
         if(creep.memory.role == 'harvester')
@@ -20,44 +19,14 @@ var creepController = {
             }
             else 
             {
-                var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                        }
-                });
-    
-                if (!target)
+                // try dump energy
+                if(!creep.tryDumpEnergy())
                 {
-                    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TOWER) &&
-                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                        }
-                    });
-                }
-                
-                if(target) {
-                    if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-                    }
-                }
-                else
-                {
-                    //creep.say('NO TARGETS');
-                    var conSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-                    if(conSite) 
-                    {
-                        if(creep.build(conSite) == ERR_NOT_IN_RANGE)
-                        {
-                            creep.moveTo(conSite, {visualizePathStyle: {stroke: '#ffffff'}});
-                        }
-                    }
+                    creep.tryBuildStructure();
                 }
                 
                 if(creep.store.getUsedCapacity() == 0)
                     creep.memory.isFilling = true;
-            
             }
         }
         else if(creep.memory.role == 'upgrader')
@@ -76,10 +45,7 @@ var creepController = {
     
             if(creep.memory.upgrading) 
             {
-                if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) 
-                {
-                    creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
+                creep.moveAndUpgradeController();
             }
             else 
             {
@@ -88,22 +54,18 @@ var creepController = {
         }
         else if(creep.memory.role == 'builder')
         {
-            let conSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
                 creep.memory.building = false;
-                //creep.say('🔄 harvest');
+                creep.say('🔄 harvest');
             }
             if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
                 creep.memory.building = true;
-                //creep.say('🚧 build');
+                creep.say('🚧 build');
             }
 
-            if(creep.memory.building) {
-                if(conSite) {
-                    if(creep.build(conSite) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(conSite, {visualizePathStyle: {stroke: '#ffffff'}});
-                    }
-                }
+            if(creep.memory.building) 
+            {
+                creep.tryBuidStructure();
             }
             else
             {
