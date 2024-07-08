@@ -18,6 +18,9 @@ var roomController = {
         // Check if room needs to build anything
         structureController.handleRoomBuilding(room);
 
+        // Transfer links
+        structureController.handleLinkTransfers(room);
+
         // Check if under attack
         this.handleAttackers(room);
 

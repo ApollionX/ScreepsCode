@@ -58,6 +58,27 @@ Creep.prototype.getEnergyFromContainer = function()
     }
 };
 
+Creep.prototype.getEnergyFromLink = function()
+{
+    let containerWithEnergy = this.pos.findClosestByPath
+    (
+        FIND_STRUCTURES, 
+        {filter: (structure) => {return structure.structureType == STRUCTURE_LINK}}
+    );
+
+    if(containerWithEnergy)
+    {
+        this.moveToTarget(containerWithEnergy.pos);
+        this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
+        this.say('🎁');
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
 Creep.prototype.moveToTarget = function (target)
 {
     let distance = this.pos.getRangeTo(target);
@@ -87,7 +108,7 @@ Creep.prototype.tryDumpEnergy = function()
             FIND_STRUCTURES,
             {
                 filter: (structure) => 
-                { return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TOWER) &&
+                { return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_LINK) &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && structure.progress == structure.progressTotal;
                 }
             }

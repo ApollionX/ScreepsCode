@@ -4,6 +4,24 @@ var structureController = {
     run: function(room)
     {
     },
+    handleLinkTransfers: function(room)
+    {
+        const links = room.find(FIND_MY_STRUCTURES, {
+            filter: { structureType: STRUCTURE_LINK }
+            });
+
+        if (links.length > 1)
+        {
+            if (links[0].id == Memory.primaryLinks[room.name].id)
+            {
+                links[0].transferEnergy(links[1]);
+            }
+            else
+            {
+                links[1].transferEnergy(links[0]);
+            }
+        }
+    }, 
     handleRoomBuilding: function(room)
     {  
         if (room.name == 'W8N2')

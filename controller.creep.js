@@ -38,8 +38,7 @@ var creepController = {
         {
             if(shouldFill) 
             {
-                if(!creep.getEnergyFromContainer())
-                    creep.mineClosestEnergy();
+                creep.getEnergyFromLink();
             }
             else
             {
@@ -142,16 +141,16 @@ var creepController = {
         var maxHarvesters = 4;
         var maxBuilders = 0;
         var maxHealers = 1;
-        var maxUpgraders = 2;
+        var maxUpgraders = 3;
         var maxExplorers = 0;
 
         // Room 2
         if (room.name == 'W8N2')
         {
             maxHarvesters = 6;
-            maxBuilders = 0;
+            maxBuilders = 3;
             maxHealers = 1;
-            maxUpgraders = 3;
+            maxUpgraders = 0;
             maxExplorers = 0;
         }
         
@@ -187,7 +186,7 @@ var creepController = {
             var newName = builderStr + Game.time;
             console.log('Spawning new builder: ' + newName);
             if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: builderStr}});   
             else
                 hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
@@ -199,7 +198,7 @@ var creepController = {
             var newName = upgraderStr + Game.time;
             console.log('Spawning new upgrader: ' + newName);
             if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], newName, 
                     {memory: {role: upgraderStr}});
             else
                 hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
