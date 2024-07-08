@@ -10,6 +10,8 @@ var creepController = {
 
         // This is where we do things once per creep
         var shouldFill = creep.shouldFill();
+        //if (creep.memory.harvestTarget)
+        //    console.log('Creep: ' + creep.name + ', harvestTarget: ' + creep.memory.harvestTarget);
 
         //console.log('Running Creep:' + creep)
         // Work creep work
@@ -41,7 +43,10 @@ var creepController = {
             }
             else
             {
-                creep.moveAndUpgradeController();
+                if(!creep.tryBuildStructure())
+                {
+                    creep.moveAndUpgradeController();
+                }
             }
         }
         else if(creep.memory.role == 'builder')
@@ -111,6 +116,20 @@ var creepController = {
             offset = 1;
         return members.length + offset;
     },
+    findHarvestTarget: function(room)
+    {
+        const myCreeps = room.find(FIND_MY_CREEPS);
+        const harvesters = _.filter(myCreeps, (creep) => creep.memory.role == 'harvester');
+        let sources = room.find(FIND_SOURCES);
+        sources.sort((a,b) => a.id - b.id);
+        const num0 = _.filter(harvesters, (creep) => creep.memory.harvestTarget == sources[0].id);
+        const num1 = _.filter(harvesters, (creep) => creep.memory.harvestTarget == sources[1].id);
+
+        if (num0 > num1)
+            return sources[1].id;
+        else
+            return sources[0].id
+    },
     handleCreepSpawning: function(room)
     {
         const harvesterStr = 'harvester';
@@ -129,10 +148,10 @@ var creepController = {
         // Room 2
         if (room.name == 'W8N2')
         {
-            maxHarvesters = 4;
-            maxBuilders = 1;
+            maxHarvesters = 6;
+            maxBuilders = 0;
             maxHealers = 1;
-            maxUpgraders = 2;
+            maxUpgraders = 3;
             maxExplorers = 0;
         }
         
@@ -152,12 +171,14 @@ var creepController = {
         {
             var newName = harvesterStr + Game.time;
             console.log('Spawning new harvester: ' + newName);
+            var harvestTarget = this.findHarvestTarget(room);
+
             if (room.name == 'W8N3')
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: harvesterStr}});
             else
                 hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: harvesterStr}});
+                    {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
 
             makeNew=true;
         }

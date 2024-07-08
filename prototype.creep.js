@@ -1,9 +1,14 @@
 Creep.prototype.mineClosestEnergy = function() 
 {
-    let closestSourceWithEnegry = this.pos.findClosestByPath(
-        FIND_SOURCES_ACTIVE, 
-        {filter: (source) => source.energy > 0}
-        );
+    let closestSourceWithEnegry;
+
+    if (this.memory.harvestTarget)
+        closestSourceWithEnegry = Game.getObjectById(this.memory.harvestTarget);
+    else
+        closestSourceWithEnegry = this.pos.findClosestByPath(
+            FIND_SOURCES_ACTIVE, 
+            {filter: (source) => source.energy > 0}
+            );
         
     if (!closestSourceWithEnegry)
         return false;
