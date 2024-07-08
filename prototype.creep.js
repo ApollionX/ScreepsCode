@@ -2,19 +2,25 @@ Creep.prototype.mineClosestEnergy = function()
 {
     let closestSourceWithEnergy;
 
+    // If we have a stored target
     if (this.memory.harvestTarget)
         closestSourceWithEnergy = Game.getObjectById(this.memory.harvestTarget);
 
+    // if stored target is empty
+    if (closestSourceWithEnergy && closestSourceWithEnergy.energy == 0)
+        closestSourceWithEnergy = null;
+
+    // No target, find closest available
     if (!closestSourceWithEnergy)
         closestSourceWithEnergy = this.pos.findClosestByPath(
             FIND_SOURCES_ACTIVE, 
             {filter: (source) => source.energy > 0}
             );
         
+    // No sources at all, return false
     if (!closestSourceWithEnergy)
         return false;
 
-    // optimize, can move then harvest
     this.moveToTarget(closestSourceWithEnergy.pos);
     this.harvest(closestSourceWithEnergy);
     this.say('⚡');

@@ -133,9 +133,9 @@ var creepController = {
 
         // Room 1
         var maxHarvesters = 3;
-        var maxBuilders = 1;
+        var maxBuilders = 0;
         var maxHealers = 1;
-        var maxUpgraders = 1;
+        var maxUpgraders = 2;
         var maxExplorers = 0;
 
         // Room 2
@@ -183,7 +183,7 @@ var creepController = {
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: builderStr}});   
             else
-                hive.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: builderStr}});
             makeNew=true;
         }
