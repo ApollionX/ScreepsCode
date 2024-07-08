@@ -60,12 +60,10 @@ Creep.prototype.getEnergyFromContainer = function()
 
 Creep.prototype.getEnergyFromLink = function()
 {
-    let containerWithEnergy = this.pos.findClosestByPath
-    (
-        FIND_STRUCTURES, 
-        {filter: (structure) => {return structure.structureType == STRUCTURE_LINK}}
-    );
+    if (!Memory.links[this.room.name])
+        return false;
 
+    let containerWithEnergy = Game.getObjectById(Memory.links[this.room.name].sid);
     if(containerWithEnergy)
     {
         this.moveToTarget(containerWithEnergy.pos);

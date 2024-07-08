@@ -2,10 +2,11 @@ var roomController = require('controller.room');
  
 module.exports.loop = function ()
 {
-    Memory.primaryLinks = 
+    Memory.links = 
     {
         'W8N3': {
-            id: '104b0b455e4f255'
+            pid: '104b0b455e4f255',
+            sid: '55830b50afd3fd8'
         }
     };
 

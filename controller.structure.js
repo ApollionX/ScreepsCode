@@ -6,19 +6,14 @@ var structureController = {
     },
     handleLinkTransfers: function(room)
     {
-        const links = room.find(FIND_MY_STRUCTURES, {
-            filter: { structureType: STRUCTURE_LINK }
-            });
-
-        if (links.length > 1)
+        if (Memory.links[room.name])
         {
-            if (links[0].id == Memory.primaryLinks[room.name].id)
+            let linkP = Game.getObjectById(Memory.links[room.name].pid);
+            let linkS = Game.getObjectById(Memory.links[room.name].sid);
+
+            if (linkP && linkS)
             {
-                links[0].transferEnergy(links[1]);
-            }
-            else
-            {
-                links[1].transferEnergy(links[0]);
+                linkP.transferEnergy(linkS);
             }
         }
     }, 

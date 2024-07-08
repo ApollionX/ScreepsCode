@@ -10,10 +10,7 @@ var creepController = {
 
         // This is where we do things once per creep
         var shouldFill = creep.shouldFill();
-        //if (creep.memory.harvestTarget)
-        //    console.log('Creep: ' + creep.name + ', harvestTarget: ' + creep.memory.harvestTarget);
 
-        //console.log('Running Creep:' + creep)
         // Work creep work
         if(creep.memory.role == 'harvester')
         {
@@ -138,7 +135,7 @@ var creepController = {
         var maxHarvesters = 3;
         var maxBuilders = 0;
         var maxHealers = 1;
-        var maxUpgraders = 1;
+        var maxUpgraders = 2;
         var maxExplorers = 0;
 
         // Room 2
