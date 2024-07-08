@@ -11,6 +11,7 @@ Creep.prototype.mineClosestEnergy = function()
     // optimize, can move then harvest
     this.moveToTarget(closestSourceWithEnegry.pos);
     this.harvest(closestSourceWithEnegry);
+    this.say('⚡');
     return true;
 };
 
@@ -27,6 +28,7 @@ Creep.prototype.mineClosestEnergyToTarget = function(pos)
     // optimize, can move then harvest
     this.moveToTarget(closestSourceWithEnegry.pos);
     this.harvest(closestSourceWithEnegry);
+    this.say('🎂');
     return true;
 };
 
@@ -42,6 +44,7 @@ Creep.prototype.getEnergyFromContainer = function()
         let containerWithEnergy = containersWithEnergy[0]; 
         this.moveToTarget(containerWithEnergy.pos);
         this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
+        this.say('🎁');
         return true;
     }
     else
@@ -56,7 +59,7 @@ Creep.prototype.moveToTarget = function (target)
     let optimizeValue = 2;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
 
     if(distance > 1)
-        this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ffaa00'}});
+        this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ff0000', opacity:1}});
 };
 
 Creep.prototype.tryDumpEnergy = function()
@@ -90,6 +93,7 @@ Creep.prototype.tryDumpEnergy = function()
     {
         this.moveToTarget(target);
         this.transfer(target, RESOURCE_ENERGY);
+        this.say('🥟');
     }
 
     return target;
@@ -102,6 +106,7 @@ Creep.prototype.tryBuildStructure = function()
     {
         this.moveToTarget(conSite);
         this.build(conSite);
+        this.say('👩‍🚒');
     }
 
     return conSite;
@@ -112,6 +117,7 @@ Creep.prototype.moveAndUpgradeController = function()
     var roomCtl = this.room.controller;
     this.moveToTarget(roomCtl.pos);
     this.upgradeController(roomCtl);
+    this.say('⛲');
 };
 
 Creep.prototype.shouldFill = function()
