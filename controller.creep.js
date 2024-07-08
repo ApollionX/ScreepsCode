@@ -42,10 +42,7 @@ var creepController = {
             }
             else
             {
-                if(!creep.tryBuildStructure())
-                {
-                    creep.moveAndUpgradeController();
-                }
+                creep.moveAndUpgradeController();
             }
         }
         else if(creep.memory.role == 'builder')
@@ -138,17 +135,17 @@ var creepController = {
         const explorerStr = 'explorer';
 
         // Room 1
-        var maxHarvesters = 4;
+        var maxHarvesters = 3;
         var maxBuilders = 0;
         var maxHealers = 1;
-        var maxUpgraders = 3;
+        var maxUpgraders = 1;
         var maxExplorers = 0;
 
         // Room 2
         if (room.name == 'W8N2')
         {
             maxHarvesters = 6;
-            maxBuilders = 3;
+            maxBuilders = 4;
             maxHealers = 1;
             maxUpgraders = 0;
             maxExplorers = 0;
@@ -176,7 +173,7 @@ var creepController = {
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: harvesterStr}});
             else
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
 
             makeNew=true;
@@ -189,7 +186,7 @@ var creepController = {
                 hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: builderStr}});   
             else
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
                     {memory: {role: builderStr}});
             makeNew=true;
         }
@@ -198,7 +195,7 @@ var creepController = {
             var newName = upgraderStr + Game.time;
             console.log('Spawning new upgrader: ' + newName);
             if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], newName, 
+                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE], newName, 
                     {memory: {role: upgraderStr}});
             else
                 hive.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
