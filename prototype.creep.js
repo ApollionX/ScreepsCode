@@ -1,38 +1,39 @@
 Creep.prototype.mineClosestEnergy = function() 
 {
-    let closestSourceWithEnegry;
+    let closestSourceWithEnergy;
 
     if (this.memory.harvestTarget)
-        closestSourceWithEnegry = Game.getObjectById(this.memory.harvestTarget);
-    else
-        closestSourceWithEnegry = this.pos.findClosestByPath(
+        closestSourceWithEnergy = Game.getObjectById(this.memory.harvestTarget);
+
+    if (!closestSourceWithEnergy)
+        closestSourceWithEnergy = this.pos.findClosestByPath(
             FIND_SOURCES_ACTIVE, 
             {filter: (source) => source.energy > 0}
             );
         
-    if (!closestSourceWithEnegry)
+    if (!closestSourceWithEnergy)
         return false;
 
     // optimize, can move then harvest
-    this.moveToTarget(closestSourceWithEnegry.pos);
-    this.harvest(closestSourceWithEnegry);
+    this.moveToTarget(closestSourceWithEnergy.pos);
+    this.harvest(closestSourceWithEnergy);
     this.say('⚡');
     return true;
 };
 
 Creep.prototype.mineClosestEnergyToTarget = function(pos) 
 {
-    let closestSourceWithEnegry = pos.findClosestByPath(
+    let closestSourceWithEnergy = pos.findClosestByPath(
         FIND_SOURCES_ACTIVE, 
         {filter: (source) => source.energy > 0}
         );
         
-    if (!closestSourceWithEnegry)
+    if (!closestSourceWithEnergy)
         return false;
 
     // optimize, can move then harvest
-    this.moveToTarget(closestSourceWithEnegry.pos);
-    this.harvest(closestSourceWithEnegry);
+    this.moveToTarget(closestSourceWithEnergy.pos);
+    this.harvest(closestSourceWithEnergy);
     this.say('🎂');
     return true;
 };
