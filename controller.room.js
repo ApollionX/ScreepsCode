@@ -10,6 +10,7 @@ var roomController = {
         //console.log('Running room: ' + room);
         // This is where we do things once per room
 
+
         var spawns = room.find(FIND_MY_SPAWNS);
         // Check if we need more creeps
         if(room.controller.my && spawns[0] && spawns[0].progress == spawns[0].progressTotal)

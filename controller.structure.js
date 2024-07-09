@@ -16,7 +16,7 @@ var structureController = {
                 linkP.transferEnergy(linkS);
             }
         }
-    }, 
+    },
     handleRoomBuilding: function(room)
     {  
         if (room.name == 'W8N2')

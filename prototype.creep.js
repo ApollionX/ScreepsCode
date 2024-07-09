@@ -93,6 +93,20 @@ Creep.prototype.moveToTarget = function (target)
         this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ff0000', opacity:1}});
 };
 
+Creep.prototype.moveWithinRangeTarget = function (target, range)
+{
+    let distance = this.pos.getRangeTo(target);
+    let optimizeValue = 2;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
+
+    if(distance > range)
+    {
+        this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ff0000', opacity:1}});
+        return true;
+    }
+
+    return false;
+};
+
 Creep.prototype.tryDumpEnergy = function()
 {
      var target = this.pos.findClosestByPath
@@ -146,7 +160,7 @@ Creep.prototype.tryBuildStructure = function()
 Creep.prototype.moveAndUpgradeController = function()
 {
     var roomCtl = this.room.controller;
-    this.moveToTarget(roomCtl.pos);
+    this.moveWithinRangeTarget(roomCtl.pos, 3);
     this.upgradeController(roomCtl);
     this.say('⛲');
 };
