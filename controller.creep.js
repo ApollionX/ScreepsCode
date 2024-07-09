@@ -115,8 +115,8 @@ var creepController = {
         const harvesters = _.filter(myCreeps, (creep) => creep.memory.role == 'harvester');
         let sources = room.find(FIND_SOURCES);
         sources.sort((a,b) => a.id - b.id);
-        const num0 = _.filter(harvesters, (creep) => creep.memory.harvestTarget == sources[0].id);
-        const num1 = _.filter(harvesters, (creep) => creep.memory.harvestTarget == sources[1].id);
+        const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));
+        const num1 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[1].id && creep.ticksToLive > 0));
 
         if (num0 > num1)
             return sources[1].id;
@@ -142,7 +142,7 @@ var creepController = {
         if (room.name == 'W8N2')
         {
             maxHarvesters = 4;
-            maxBuilders = 1;
+            maxBuilders = 2;
             maxHealers = 1;
             maxUpgraders = 1;
             maxExplorers = 0;
