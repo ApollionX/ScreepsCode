@@ -124,9 +124,11 @@ var creepController = {
         const myCreeps = room.find(FIND_MY_CREEPS);
         const harvesters = _.filter(myCreeps, (creep) => creep.memory.role == 'harvester');
         let sources = room.find(FIND_SOURCES);
-        sources.sort((a,b) => a.id - b.id);
+        sources.sort((a,b) => a.id > b.id);
         const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));
         const num1 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[1].id && creep.ticksToLive > 0));
+
+        console.log('T0: ' + num0.length + ', T1: ' + num1.length);
 
         if (num0.length > num1.length)
             return sources[1].id;
@@ -159,11 +161,11 @@ var creepController = {
 
             var harvestTarget = null;
             if(roomMem.targetedHarvesting)
-                this.findHarvestTarget(room);
+                harvestTarget = this.findHarvestTarget(room);
 
             console.log('Spawning new harvester: ' + newName + ', Target: ' + harvestTarget);
             hive.spawnCreep(roomMem.harvesterBody, newName, 
-                {memory: {role: harvesterStr}});
+                {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
 
             makeNew=true;
         }
