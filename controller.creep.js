@@ -128,8 +128,6 @@ var creepController = {
         const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));
         const num1 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[1].id && creep.ticksToLive > 0));
 
-        console.log('T0: ' + num0.length + ', T1: ' + num1.length);
-
         if (num0.length > num1.length)
             return sources[1].id;
         else
