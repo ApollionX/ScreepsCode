@@ -152,7 +152,7 @@ Creep.prototype.tryBuildStructure = function()
     var conSite = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
     if(conSite) 
     {
-        this.moveToTarget(conSite);
+        this.moveWithinRangeTarget(conSite, 2);
         this.build(conSite);
         this.say('👩‍🚒');
     }

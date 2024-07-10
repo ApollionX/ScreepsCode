@@ -74,15 +74,13 @@ var creepController = {
             var homeFlag = Game.flags['TheHive'];
             var targetFlag = Game.flags['Flag1'];
 
-            console.log('Room: ' + creep.room.name + ', Home: ' + homeFlag.room.name);
+            //console.log('Room: ' + creep.room.name + ', Home: ' + homeFlag.room.name);
             if(creep.room.name == homeFlag.room.name)
             {
-                console.log('moving to flag room');
                 creep.moveToTarget(targetFlag.pos);
             }
             else
             {
-                console.log('In flag room!');
                 if (creep.room.controller && creep.room.controller.my)
                 {
                     if(shouldFill)
@@ -110,6 +108,7 @@ var creepController = {
         else
         {
             //WTF?!
+            console.log('WTF?!');
         }
     },
     getNumRole: function(list, role, spawningCreep)
