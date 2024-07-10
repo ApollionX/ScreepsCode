@@ -70,7 +70,7 @@ Creep.prototype.getEnergyFromLink = function()
     if (!Memory.links[this.room.name])
         return false;
 
-    let containerWithEnergy = Game.getObjectById(Memory.links[this.room.name].sid);
+    let containerWithEnergy = Game.getObjectById(Memory.links[this.room.name].pid);
     if(containerWithEnergy)
     {
         this.moveToTarget(containerWithEnergy.pos);
@@ -86,6 +86,9 @@ Creep.prototype.getEnergyFromLink = function()
 
 Creep.prototype.moveToTarget = function (target)
 {
+    if (!target)
+        return;
+
     let distance = this.pos.getRangeTo(target);
     let optimizeValue = 2;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
 

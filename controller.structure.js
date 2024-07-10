@@ -13,7 +13,7 @@ var structureController = {
 
             if (linkP && linkS)
             {
-                linkP.transferEnergy(linkS);
+                linkS.transferEnergy(linkP);
             }
         }
     },

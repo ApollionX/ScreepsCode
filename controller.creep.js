@@ -83,15 +83,26 @@ var creepController = {
             else
             {
                 console.log('In flag room!');
-                if(shouldFill)
+                if (creep.room.controller && creep.room.controller.my)
                 {
-                    creep.mineClosestEnergyToTarget(targetFlag.pos);
+                    if(shouldFill)
+                    {
+                        creep.mineClosestEnergyToTarget(targetFlag.pos);
+                    }
+                    else
+                    {
+                        if(!creep.tryBuildStructure())
+                        {
+                            creep.tryDumpEnergy();
+                        }
+                    }
                 }
                 else
                 {
-                    if(!creep.tryBuildStructure())
+                    if(!creep.moveWithinRangeTarget(targetFlag, 1))
                     {
-                        creep.tryDumpEnergy();
+                        creep.reserveController(creep.room.controller);
+                        creep.claimController(creep.room.controller);
                     }
                 }
             }
@@ -118,7 +129,7 @@ var creepController = {
         const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));
         const num1 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[1].id && creep.ticksToLive > 0));
 
-        if (num0 > num1)
+        if (num0.length > num1.length)
             return sources[1].id;
         else
             return sources[0].id
@@ -130,29 +141,12 @@ var creepController = {
         const healerStr = 'healer';
         const upgraderStr = 'upgrader';
         const explorerStr = 'explorer';
-
-        // Room 1
-        var maxHarvesters = 3;
-        var maxBuilders = 0;
-        var maxHealers = 1;
-        var maxUpgraders = 2;
-        var maxExplorers = 0;
-
-        // Room 2
-        if (room.name == 'W8N2')
-        {
-            maxHarvesters = 4;
-            maxBuilders = 2;
-            maxHealers = 1;
-            maxUpgraders = 1;
-            maxExplorers = 0;
-        }
-        
-        var myCreeps = room.find(FIND_MY_CREEPS);
+        const myCreeps = room.find(FIND_MY_CREEPS);
         const spawns = room.find(FIND_MY_SPAWNS);
         const hive = spawns[0];
         const spawningCreep = hive.spawning;
-
+        const roomMem = Memory.links[room.name];
+        
         var numHarvesters = this.getNumRole(myCreeps, harvesterStr, spawningCreep);
         var numBuilders = this.getNumRole(myCreeps, builderStr, spawningCreep);
         var numHealers = this.getNumRole(myCreeps, healerStr, spawningCreep);
@@ -160,65 +154,50 @@ var creepController = {
         var numExplorers = this.getNumRole(Game.creeps, explorerStr, spawningCreep);
         
         let makeNew = false;
-        if(numHarvesters < maxHarvesters) 
+        if(numHarvesters < roomMem.maxHarvesters) 
         {
             var newName = harvesterStr + Game.time;
-            console.log('Spawning new harvester: ' + newName);
-            var harvestTarget = this.findHarvestTarget(room);
 
-            if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: harvesterStr}});
-            else
-                hive.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
+            var harvestTarget = null;
+            if(roomMem.targetedHarvesting)
+                this.findHarvestTarget(room);
+
+            console.log('Spawning new harvester: ' + newName + ', Target: ' + harvestTarget);
+            hive.spawnCreep(roomMem.harvesterBody, newName, 
+                {memory: {role: harvesterStr}});
 
             makeNew=true;
         }
-        else if(numBuilders < maxBuilders)
+        else if(numBuilders < roomMem.maxBuilders)
         {
             var newName = builderStr + Game.time;
             console.log('Spawning new builder: ' + newName);
-            if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: builderStr}});   
-            else
-                hive.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: builderStr}});
+            hive.spawnCreep(roomMem.builderBody, newName, 
+                {memory: {role: builderStr}});   
             makeNew=true;
         }
-        else if(numUpgraders < maxUpgraders)
+        else if(numUpgraders < roomMem.maxUpgraders)
         {
             var newName = upgraderStr + Game.time;
             console.log('Spawning new upgrader: ' + newName);
-            if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE], newName, 
-                    {memory: {role: upgraderStr}});
-            else
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE], newName, 
-                    {memory: {role: upgraderStr}});
+            hive.spawnCreep(roomMem.upgraderBody, newName, 
+                {memory: {role: upgraderStr}});
             makeNew=true;
         }
-        else if(numHealers < maxHealers)
+        else if(numHealers < roomMem.maxHealers)
         {
             var newName = healerStr + Game.time;
             console.log('Spawning new healer: ' + newName);
-            if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: healerStr}});  
-            else
-                hive.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: healerStr}});
-
+            hive.spawnCreep(roomMem.healerBody, newName, 
+                {memory: {role: healerStr}});  
             makeNew=true;
         }
-        else if(numExplorers < maxExplorers)
+        else if(numExplorers < roomMem.maxExplorers)
         {
             var newName = explorerStr + Game.time;
             console.log('Spawning new Explorer: ' + newName);
-            if (room.name == 'W8N3')
-                hive.spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], newName, 
-                    {memory: {role: explorerStr}});  
+            hive.spawnCreep(roomMem.explorerBody, newName, 
+                {memory: {role: explorerStr}});  
             makeNew=true;
         }
         
