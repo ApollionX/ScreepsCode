@@ -105,6 +105,13 @@ var creepController = {
                 }
             }
         }
+        else if(creep.memory.role == 'producer')
+        {
+        }
+        else if(creep.memory.role == 'consumer')
+        {
+            
+        }
         else
         {
             //WTF?!
@@ -140,6 +147,9 @@ var creepController = {
         const healerStr = 'healer';
         const upgraderStr = 'upgrader';
         const explorerStr = 'explorer';
+        const consumerStr = 'consumer';
+        const producerStr = 'producer';
+
         const myCreeps = room.find(FIND_MY_CREEPS);
         const spawns = room.find(FIND_MY_SPAWNS);
         const hive = spawns[0];
@@ -151,6 +161,8 @@ var creepController = {
         var numHealers = this.getNumRole(myCreeps, healerStr, spawningCreep);
         var numUpgraders = this.getNumRole(myCreeps, upgraderStr, spawningCreep);
         var numExplorers = this.getNumRole(Game.creeps, explorerStr, spawningCreep);
+        var numConsumers = this.getNumRole(Game.creeps, consumerStr, spawningCreep);
+        var numProducers = this.getNumRole(Game.creeps, producerStr, spawningCreep);
         
         let makeNew = false;
         if(numHarvesters < roomMem.maxHarvesters) 
@@ -165,6 +177,28 @@ var creepController = {
             hive.spawnCreep(roomMem.harvesterBody, newName, 
                 {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
 
+            makeNew=true;
+        }
+        else if(numProducers < roomMem.maxProducers) 
+        {
+            var newName = producerStr + Game.time;
+
+            var harvestTarget = null;
+            if(roomMem.targetedHarvesting)
+                harvestTarget = this.findHarvestTarget(room);
+
+            console.log('Spawning new producer: ' + newName + ', Target: ' + harvestTarget);
+            hive.spawnCreep(roomMem.producerBody, newName, 
+                {memory: {role: producerStr, harvestTarget: harvestTarget}});
+
+            makeNew=true;
+        }
+        else if(numConsumers < roomMem.maxConsumers)
+        {
+            var newName = consumerStr + Game.time;
+            console.log('Spawning new consumer: ' + newName);
+            hive.spawnCreep(roomMem.consumerBody, newName, 
+                {memory: {role: consumerStr}});   
             makeNew=true;
         }
         else if(numBuilders < roomMem.maxBuilders)
