@@ -61,8 +61,9 @@ var creepController = {
         {
             if(shouldFill)
             {
-                if(!creep.getEnergyFromContainer())
-                    creep.mineClosestEnergy();
+                if (!creep.getEnergyFromLink())
+                    if(!creep.getEnergyFromContainer())
+                        creep.mineClosestEnergy();
             }
             else
             {
@@ -107,10 +108,27 @@ var creepController = {
         }
         else if(creep.memory.role == 'producer')
         {
+            if(!creep.moveToProducerSpot())
+            {
+                creep.stationaryMining();
+            }
         }
         else if(creep.memory.role == 'consumer')
         {
-            
+            if(shouldFill)
+            {
+                creep.getEnergyFromLink();
+            }
+            else
+            {
+                if(!creep.tryDumpEnergyExtension())
+                {
+                    if(!creep.tryBuildStructure())
+                    {
+                        creep.moveAndUpgradeController();
+                    }
+                }
+            }
         }
         else
         {
@@ -129,7 +147,7 @@ var creepController = {
     findHarvestTarget: function(room)
     {
         const myCreeps = room.find(FIND_MY_CREEPS);
-        const harvesters = _.filter(myCreeps, (creep) => creep.memory.role == 'harvester');
+        const harvesters = _.filter(myCreeps, (creep) => (creep.memory.role == 'harvester' || creep.memory.role == 'producer'));
         let sources = room.find(FIND_SOURCES);
         sources.sort((a,b) => a.id > b.id);
         const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));

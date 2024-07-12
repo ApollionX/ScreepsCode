@@ -27,6 +27,53 @@ Creep.prototype.mineClosestEnergy = function()
     return true;
 };
 
+Creep.prototype.stationaryMining = function()
+{
+    let source = Game.getObjectById(this.memory.harvestTarget);
+    let link = Game.getObjectById(Memory.links[this.room.name].sid);
+
+    this.harvest(source);
+    this.transfer(link, RESOURCE_ENERGY);
+    this.say('👲');
+};
+
+Creep.prototype.moveToProducerSpot = function()
+{
+    if (!this.memory.standingSpot)
+    {
+        source = Game.getObjectById(this.memory.harvestTarget);
+        link = Game.getObjectById(Memory.links[this.room.name].sid);
+
+        console.log(source + link);
+
+        for (let x = -1; x < 2; ++x)
+        {
+            for(let y = -1; y < 2; ++y)
+            {
+                if (x==0 && y == 0)
+                    continue;
+                else
+                {
+                    const check = new RoomPosition(source.pos.x + x, source.pos.y + y, source.pos.roomName);
+                    if (check.inRangeTo(source.pos, 1) && check.inRangeTo(link.pos, 1))
+                    {
+                        this.memory.standingSpot = check;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        let target = new RoomPosition(this.memory.standingSpot.x, this.memory.standingSpot.y, this.memory.standingSpot.roomName);
+        let result = !this.standOnTarget(target);
+        return result;
+    }
+};
+
 Creep.prototype.mineClosestEnergyToTarget = function(pos) 
 {
     let closestSourceWithEnergy = pos.findClosestByPath(
@@ -110,6 +157,20 @@ Creep.prototype.moveWithinRangeTarget = function (target, range)
     return false;
 };
 
+Creep.prototype.standOnTarget = function (target)
+{
+    let distance = this.pos.getRangeTo(target);
+    let optimizeValue = 2;  // Higher the more optimal, slower to react, 0 most optimal HIGHEST CPU (Default: 5)
+
+    if(target.x != this.pos.x || target.y != this.pos.y)
+    {
+        this.moveTo(target, {reusePath: optimizeValue, visualizePathStyle: {stroke: '#ff0000', opacity:1}});
+        return false;
+    }
+
+    return true;
+};
+
 Creep.prototype.tryDumpEnergy = function()
 {
      var target = this.pos.findClosestByPath
@@ -145,6 +206,30 @@ Creep.prototype.tryDumpEnergy = function()
     }
 
     return target;
+};
+
+Creep.prototype.tryDumpEnergyExtension = function()
+{
+    var target = this.pos.findClosestByPath
+    (
+       FIND_STRUCTURES, 
+       { 
+           filter: (structure) => 
+           { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+           }
+       }
+   );
+
+   if(target)
+    {
+        this.moveToTarget(target);
+        this.transfer(target, RESOURCE_ENERGY);
+        this.say('🥟');
+        return true;
+    }
+
+    return false;
 };
 
 Creep.prototype.tryBuildStructure = function()
