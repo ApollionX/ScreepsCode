@@ -31,9 +31,11 @@ Creep.prototype.stationaryMining = function()
 {
     let source = Game.getObjectById(this.memory.harvestTarget);
     let link = Game.getObjectById(Memory.links[this.room.name].sid);
+    let link2 = Game.getObjectById(Memory.links[this.room.name].ssid);
 
     this.harvest(source);
     this.transfer(link, RESOURCE_ENERGY);
+    this.transfer(link2, RESOURCE_ENERGY);
     this.say('👲');
 };
 
@@ -43,6 +45,14 @@ Creep.prototype.moveToProducerSpot = function()
     {
         source = Game.getObjectById(this.memory.harvestTarget);
         link = Game.getObjectById(Memory.links[this.room.name].sid);
+        links = this.room.find
+        (
+            FIND_STRUCTURES,
+            {
+                filter: (structure) => 
+                { return structure.structureType == STRUCTURE_LINK; }
+            }
+        );
 
         console.log(source + link);
 
@@ -55,10 +65,16 @@ Creep.prototype.moveToProducerSpot = function()
                 else
                 {
                     const check = new RoomPosition(source.pos.x + x, source.pos.y + y, source.pos.roomName);
-                    if (check.inRangeTo(source.pos, 1) && check.inRangeTo(link.pos, 1))
+                    console.log(check.inRangeTo(link.pos, 1));
+
+                    for (let i = 0; i < links.length; ++i)
                     {
-                        this.memory.standingSpot = check;
-                        return true;
+                        if (check.inRangeTo(source.pos, 1) && check.inRangeTo(links[i], 1))
+                        {
+                            this.memory.standingSpot = check;
+                            
+                            return true;
+                        }
                     }
                 }
             }

@@ -10,10 +10,16 @@ var structureController = {
         {
             let linkP = Game.getObjectById(Memory.links[room.name].pid);
             let linkS = Game.getObjectById(Memory.links[room.name].sid);
+            let linkSS = Game.getObjectById(Memory.links[room.name].ssid);
 
             if (linkP && linkS)
             {
                 linkS.transferEnergy(linkP);
+            }
+
+            if (linkP && linkSS)
+            {
+                linkSS.transferEnergy(linkP);
             }
         }
     },
