@@ -43,9 +43,8 @@ Creep.prototype.moveToProducerSpot = function()
 {
     if (!this.memory.standingSpot)
     {
-        source = Game.getObjectById(this.memory.harvestTarget);
-        link = Game.getObjectById(Memory.links[this.room.name].sid);
-        links = this.room.find
+        const source = Game.getObjectById(this.memory.harvestTarget);
+        const links = this.room.find
         (
             FIND_STRUCTURES,
             {
@@ -54,8 +53,7 @@ Creep.prototype.moveToProducerSpot = function()
             }
         );
 
-        console.log(source + link);
-
+        //console.log(source + links);
         for (let x = -1; x < 2; ++x)
         {
             for(let y = -1; y < 2; ++y)
@@ -65,7 +63,6 @@ Creep.prototype.moveToProducerSpot = function()
                 else
                 {
                     const check = new RoomPosition(source.pos.x + x, source.pos.y + y, source.pos.roomName);
-                    console.log(check.inRangeTo(link.pos, 1));
 
                     for (let i = 0; i < links.length; ++i)
                     {
@@ -119,7 +116,7 @@ Creep.prototype.getEnergyFromContainer = function()
         let containerWithEnergy = containersWithEnergy[0]; 
         this.moveToTarget(containerWithEnergy.pos);
         this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
-        this.say('🎁');
+        this.say('🔌');
         return true;
     }
     else
@@ -138,7 +135,7 @@ Creep.prototype.getEnergyFromLink = function()
     {
         this.moveToTarget(containerWithEnergy.pos);
         this.withdraw(containerWithEnergy, RESOURCE_ENERGY);
-        this.say('🎁');
+        this.say('🔌');
         return true;
     }
     else
@@ -218,7 +215,7 @@ Creep.prototype.tryDumpEnergy = function()
     {
         this.moveToTarget(target);
         this.transfer(target, RESOURCE_ENERGY);
-        this.say('🥟');
+        this.say('🌞');
     }
 
     return target;
@@ -231,7 +228,7 @@ Creep.prototype.tryDumpEnergyExtension = function()
        FIND_STRUCTURES, 
        { 
            filter: (structure) => 
-           { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+           { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
            }
        }
@@ -241,7 +238,7 @@ Creep.prototype.tryDumpEnergyExtension = function()
     {
         this.moveToTarget(target);
         this.transfer(target, RESOURCE_ENERGY);
-        this.say('🥟');
+        this.say('🌞');
         return true;
     }
 
