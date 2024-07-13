@@ -59,10 +59,10 @@ module.exports.loop = function ()
             maxHarvesters: 0,
             maxBuilders: 0,
             maxHealers: 1,
-            maxUpgraders: 1,
+            maxUpgraders: 0,
             maxExplorers: 0,
             maxProducers: 2,
-            maxConsumers: 2,
+            maxConsumers: 3,
             harvesterBody: [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
             builderBody: [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
             healerBody: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],
@@ -73,6 +73,14 @@ module.exports.loop = function ()
             targetedHarvesting: true
         }
     };
+
+    for (var name in Memory.creeps)
+    {
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+    }
 
     let ownedRoomNames = Object.keys(Game.rooms);
     ownedRoomNames.forEach(roomName =>

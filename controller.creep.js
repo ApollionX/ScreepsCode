@@ -136,13 +136,11 @@ var creepController = {
             console.log('WTF?!');
         }
     },
-    getNumRole: function(list, role, spawningCreep)
+    getNumRole: function(list, role)
     {
-        const members = _.filter(list, (creep) => creep.memory.role == role);
-        var offset = 0;
-        if (spawningCreep && spawningCreep.name.includes(role))
-            offset = 1;
-        return members.length + offset;
+        if (!list || !role)
+            return;
+        return _.filter(list, (creep) => creep.memory.role == role).length;
     },
     findHarvestTarget: function(room)
     {
@@ -160,6 +158,16 @@ var creepController = {
     },
     handleCreepSpawning: function(room)
     {
+        const spawns = room.find(FIND_MY_SPAWNS);
+        if (!spawns || (spawns.length < 1))
+            return;
+        
+        for (let spawn of spawns)
+        {
+            if(spawn.spawning)
+                return;
+        }
+
         const harvesterStr = 'harvester';
         const builderStr = 'builder';
         const healerStr = 'healer';
@@ -169,111 +177,66 @@ var creepController = {
         const producerStr = 'producer';
 
         const myCreeps = room.find(FIND_MY_CREEPS);
-        const spawns = room.find(FIND_MY_SPAWNS);
         const hive = spawns[0];
-        const spawningCreep = hive.spawning;
         const roomMem = Memory.links[room.name];
         
-        var numHarvesters = this.getNumRole(myCreeps, harvesterStr, spawningCreep);
-        var numBuilders = this.getNumRole(myCreeps, builderStr, spawningCreep);
-        var numHealers = this.getNumRole(myCreeps, healerStr, spawningCreep);
-        var numUpgraders = this.getNumRole(myCreeps, upgraderStr, spawningCreep);
-        var numExplorers = this.getNumRole(Game.creeps, explorerStr, spawningCreep);
-        var numConsumers = this.getNumRole(myCreeps, consumerStr, spawningCreep);
-        var numProducers = this.getNumRole(myCreeps, producerStr, spawningCreep);
-         
-        let shouldSpawn = true;
-        if (!spawns)
-            return;
-        
-        for (let spawn of spawns)
+        var numHarvesters = this.getNumRole(myCreeps, harvesterStr);
+        var numBuilders = this.getNumRole(myCreeps, builderStr);
+        var numHealers = this.getNumRole(myCreeps, healerStr);
+        var numUpgraders = this.getNumRole(myCreeps, upgraderStr);
+        var numExplorers = this.getNumRole(Game.creeps, explorerStr);
+        var numConsumers = this.getNumRole(myCreeps, consumerStr);
+        var numProducers = this.getNumRole(myCreeps, producerStr);
+
+        if(numHarvesters < roomMem.maxHarvesters) 
         {
-            if(spawn.spawning)
-                shouldSpawn = false;
+            var harvestTarget = null;
+            if(roomMem.targetedHarvesting)
+                harvestTarget = this.findHarvestTarget(room);
+
+            if(OK == hive.spawnCreep(roomMem.harvesterBody, harvesterStr + Game.time, 
+                {memory: {role: harvesterStr, harvestTarget: harvestTarget}}))
+                console.log('Spawning new harvester, Target: ' + harvestTarget);
         }
-
-        if (shouldSpawn)
+        else if(numProducers < roomMem.maxProducers) 
         {
-            let makeNew = false;
-            if(numHarvesters < roomMem.maxHarvesters) 
-            {
-                var newName = harvesterStr + Game.time;
+            var harvestTarget = null;
+            if(roomMem.targetedHarvesting)
+                harvestTarget = this.findHarvestTarget(room);
 
-                var harvestTarget = null;
-                if(roomMem.targetedHarvesting)
-                    harvestTarget = this.findHarvestTarget(room);
-
-                console.log('Spawning new harvester: ' + newName + ', Target: ' + harvestTarget);
-                hive.spawnCreep(roomMem.harvesterBody, newName, 
-                    {memory: {role: harvesterStr, harvestTarget: harvestTarget}});
-
-                makeNew=true;
-            }
-            else if(numProducers < roomMem.maxProducers) 
-            {
-                var newName = producerStr + Game.time;
-
-                var harvestTarget = null;
-                if(roomMem.targetedHarvesting)
-                    harvestTarget = this.findHarvestTarget(room);
-
-                console.log('Spawning new producer: ' + newName + ', Target: ' + harvestTarget);
-                hive.spawnCreep(roomMem.producerBody, newName, 
-                    {memory: {role: producerStr, harvestTarget: harvestTarget}});
-
-                makeNew=true;
-            }
-            else if(numConsumers < roomMem.maxConsumers)
-            {
-                var newName = consumerStr + Game.time;
-                console.log('Spawning new consumer: ' + newName);
-                hive.spawnCreep(roomMem.consumerBody, newName, 
-                    {memory: {role: consumerStr}});   
-                makeNew=true;
-            }
-            else if(numBuilders < roomMem.maxBuilders)
-            {
-                var newName = builderStr + Game.time;
-                console.log('Spawning new builder: ' + newName);
-                hive.spawnCreep(roomMem.builderBody, newName, 
-                    {memory: {role: builderStr}});   
-                makeNew=true;
-            }
-            else if(numUpgraders < roomMem.maxUpgraders)
-            {
-                var newName = upgraderStr + Game.time;
-                console.log('Spawning new upgrader: ' + newName);
-                hive.spawnCreep(roomMem.upgraderBody, newName, 
-                    {memory: {role: upgraderStr}});
-                makeNew=true;
-            }
-            else if(numHealers < roomMem.maxHealers)
-            {
-                var newName = healerStr + Game.time;
-                console.log('Spawning new healer: ' + newName);
-                hive.spawnCreep(roomMem.healerBody, newName, 
-                    {memory: {role: healerStr}});  
-                makeNew=true;
-            }
-            else if(numExplorers < roomMem.maxExplorers)
-            {
-                var newName = explorerStr + Game.time;
-                console.log('Spawning new Explorer: ' + newName);
-                hive.spawnCreep(roomMem.explorerBody, newName, 
-                    {memory: {role: explorerStr}});  
-                makeNew=true;
-            }
-            
-            if (makeNew)
-            {
-                for (var name in Memory.creeps)
-                {
-                    if (!Game.creeps[name]) {
-                        delete Memory.creeps[name];
-                        console.log('Clearing non-existing creep memory:', name);
-                    }
-                }
-            }
+            if(OK == hive.spawnCreep(roomMem.producerBody, producerStr + Game.time, 
+                {memory: {role: producerStr, harvestTarget: harvestTarget}}))
+                console.log('Spawning new producer, Target: ' + harvestTarget);
+        }
+        else if(numConsumers < roomMem.maxConsumers)
+        {
+            if(OK == hive.spawnCreep(roomMem.consumerBody, consumerStr + Game.time, 
+                {memory: {role: consumerStr}})) 
+                console.log('Spawning new consumer');
+        }
+        else if(numBuilders < roomMem.maxBuilders)
+        {
+            if(OK == hive.spawnCreep(roomMem.builderBody, builderStr + Game.time, 
+                {memory: {role: builderStr}}))
+                console.log('Spawning new builder');
+        }
+        else if(numUpgraders < roomMem.maxUpgraders)
+        {
+            if(OK == hive.spawnCreep(roomMem.upgraderBody, upgraderStr + Game.time, 
+                {memory: {role: upgraderStr}}))
+                console.log('Spawning new upgrader');
+        }
+        else if(numHealers < roomMem.maxHealers)
+        {
+            if(OK == hive.spawnCreep(roomMem.healerBody, healerStr + Game.time, 
+                {memory: {role: healerStr}}))  
+                console.log('Spawning new healer');
+        }
+        else if(numExplorers < roomMem.maxExplorers)
+        {
+            if(OK == hive.spawnCreep(roomMem.explorerBody, explorerStr + Game.time, 
+                {memory: {role: explorerStr}})) 
+                console.log('Spawning new Explorer');
         }
     }
 };
