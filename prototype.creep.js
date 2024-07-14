@@ -323,7 +323,7 @@ Creep.prototype.tryAndRepairSomething = function()
 
 Creep.prototype.attackArea = function(pos)
 {
-    var target = pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    var target = pos.findClosestByPath(FIND_HOSTILE_CREEPS || FIND_HOSTILE_STRUCTURES || FIND_HOSTILE_SPAWNS);
     this.moveToTarget(target);
     this.attack(target);
 };

@@ -72,11 +72,9 @@ var creepController = {
         }
         else if(creep.memory.role == 'explorer')
         {
-            var homeFlag = Game.flags['TheHive'];
             var targetFlag = Game.flags['Flag1'];
-
-            //console.log('Room: ' + creep.room.name + ', Home: ' + homeFlag.room.name);
-            if(creep.room.name == homeFlag.room.name)
+            //console.log('Room: ' + targetFlag.pos.roomName + ' ,' +targetFlag.pos.roomName );
+            if(creep.pos.roomName !== targetFlag.pos.roomName)
             {
                 creep.moveToTarget(targetFlag.pos);
             }
@@ -100,8 +98,14 @@ var creepController = {
                 {
                     if(!creep.moveWithinRangeTarget(targetFlag, 1))
                     {
-                        creep.reserveController(creep.room.controller);
-                        creep.claimController(creep.room.controller);
+                        //console.log('claiming');
+                        var test = creep.reserveController(creep.room.controller);
+                        var test2 = creep.claimController(creep.room.controller);
+                        //console.log(test + '  ' + test2);
+                    }
+                    else
+                    {
+                        //console.log('moving');
                     }
                 }
             }
