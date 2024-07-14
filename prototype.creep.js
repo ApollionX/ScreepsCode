@@ -321,6 +321,13 @@ Creep.prototype.tryAndRepairSomething = function()
     return this.memory.patient
 };
 
+Creep.prototype.attackArea = function(pos)
+{
+    var target = pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    this.moveToTarget(target);
+    this.attack(target);
+};
+
 Creep.prototype.claimRoom = function()
 {
     var controller = this.room.controller;

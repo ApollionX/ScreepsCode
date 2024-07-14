@@ -130,6 +130,19 @@ var creepController = {
                 }
             }
         }
+        else if(creep.memory.role == 'attacker') 
+        {
+            var rallyFlag = Game.flags['Rally'];
+            var killFlag = Game.flags['Kill'];
+            if(killFlag)
+            {
+                creep.attackArea(killFlag.pos);
+            }
+            else if(rallyFlag)
+            {
+                creep.moveWithinRangeTarget(rallyFlag, 3);
+            }
+        }
         else
         {
             //WTF?!
@@ -175,6 +188,7 @@ var creepController = {
         const explorerStr = 'explorer';
         const consumerStr = 'consumer';
         const producerStr = 'producer';
+        const attackerStr = 'attacker';
 
         const myCreeps = room.find(FIND_MY_CREEPS);
         const hive = spawns[0];
@@ -187,6 +201,9 @@ var creepController = {
         var numExplorers = this.getNumRole(Game.creeps, explorerStr);
         var numConsumers = this.getNumRole(myCreeps, consumerStr);
         var numProducers = this.getNumRole(myCreeps, producerStr);
+        var numAttackers = this.getNumRole(myCreeps, attackerStr);
+
+        //console.log('Attacker: ' + numAttackers);
 
         if(numHarvesters < roomMem.maxHarvesters) 
         {
@@ -237,6 +254,12 @@ var creepController = {
             if(OK == hive.spawnCreep(roomMem.explorerBody, explorerStr + Game.time, 
                 {memory: {role: explorerStr}})) 
                 console.log('Spawning new Explorer');
+        }
+        else if(numAttackers < roomMem.maxAttackers)
+        {
+            if(OK == hive.spawnCreep(roomMem.attackerBody, attackerStr + Game.time, 
+                {memory: {role: attackerStr}})) 
+                console.log('Spawning new Attacker!');
         }
     }
 };

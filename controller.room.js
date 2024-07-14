@@ -13,7 +13,7 @@ var roomController = {
 
         var spawns = room.find(FIND_MY_SPAWNS);
         // Check if we need more creeps
-        if(room.controller.my && spawns[0] && spawns[0].progress == spawns[0].progressTotal)
+        if(room.controller && room.controller.my && spawns[0] && spawns[0].progress == spawns[0].progressTotal)
             creepController.handleCreepSpawning(room);
 
         // Check if room needs to build anything
