@@ -55,7 +55,7 @@ module.exports.loop = function ()
             maxHarvesters: 0,
             maxBuilders:   0, 
             maxHealers:    1,
-            maxUpgraders:  1,
+            maxUpgraders:  0,
             maxExplorers:  0,
             maxProducers:  2,
             maxConsumers:  2,
@@ -133,17 +133,17 @@ module.exports.loop = function ()
             pid:  '',
             sid:  '',
             ssid: '',
-            maxHarvesters: 6,
+            maxHarvesters: 8,
             maxBuilders:   0,
-            maxHealers:    0,
+            maxHealers:    1,
             maxUpgraders:  0,
             maxExplorers:  0,
             maxProducers:  0,
             maxConsumers:  0,
             maxAttackers:  0,
-            harvesterBody: [WORK,WORK,WORK,
-                            CARRY,CARRY,
-                            MOVE,MOVE,MOVE],
+            harvesterBody: [WORK,WORK,WORK,WORK,WORK,
+                            CARRY,CARRY,CARRY,CARRY,
+                            MOVE,MOVE,MOVE,MOVE,MOVE],
             builderBody:   [WORK,WORK,WORK,WORK,WORK,WORK,
                             CARRY,CARRY,CARRY,CARRY,CARRY,
                             MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -165,7 +165,7 @@ module.exports.loop = function ()
             attackerBody:  [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
                             ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
                             MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-            targetedHarvesting: false
+            targetedHarvesting: true
         }
     };
 
@@ -173,9 +173,12 @@ module.exports.loop = function ()
     {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
+            //console.log('Clearing non-existing creep memory:', name);
         }
     }
+
+    //if(Game.cpu.bucket == 10000)
+        //console.log(Game.cpu.generatePixel());
 
     let ownedRoomNames = Object.keys(Game.rooms);
     ownedRoomNames.forEach(roomName =>

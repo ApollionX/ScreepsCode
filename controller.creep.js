@@ -164,7 +164,8 @@ var creepController = {
         const myCreeps = room.find(FIND_MY_CREEPS);
         const harvesters = _.filter(myCreeps, (creep) => (creep.memory.role == 'harvester' || creep.memory.role == 'producer'));
         let sources = room.find(FIND_SOURCES);
-        sources.sort((a,b) => a.id > b.id);
+        sources.sort((a,b) => a.id.localeCompare(b.id));
+        console.log('TargetSources: ' + sources);
         const num0 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[0].id && creep.ticksToLive > 0));
         const num1 = _.filter(harvesters, (creep) => (creep.memory.harvestTarget == sources[1].id && creep.ticksToLive > 0));
 
