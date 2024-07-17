@@ -130,16 +130,16 @@ module.exports.loop = function ()
         'W7N4':
         {
             name: 'Fourth Room',
-            pid:  '',
-            sid:  '',
+            pid:  '795ea73e6942f8e',
+            sid:  'ccd9a6ec6506a54',
             ssid: '',
-            maxHarvesters: 8,
+            maxHarvesters: 4,
             maxBuilders:   0,
             maxHealers:    1,
             maxUpgraders:  0,
             maxExplorers:  0,
-            maxProducers:  0,
-            maxConsumers:  0,
+            maxProducers:  1,
+            maxConsumers:  1,
             maxAttackers:  0,
             harvesterBody: [WORK,WORK,WORK,WORK,WORK,
                             CARRY,CARRY,CARRY,CARRY,
@@ -165,7 +165,10 @@ module.exports.loop = function ()
             attackerBody:  [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
                             ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
                             MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-            targetedHarvesting: true
+            targetedHarvesting: true,
+            tempRules: true,
+            temp1: '80d207728e6597b',
+            temp2: 'c44207728e621fc'
         }
     };
 

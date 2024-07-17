@@ -216,6 +216,11 @@ var creepController = {
             if(roomMem.targetedHarvesting)
                 harvestTarget = this.findHarvestTarget(room);
 
+            if (roomMem.tempRules)
+            {
+                harvestTarget = roomMem.temp2;
+            }
+
             if(OK == hive.spawnCreep(roomMem.harvesterBody, harvesterStr + Game.time, 
                 {memory: {role: harvesterStr, harvestTarget: harvestTarget}}))
                 console.log('Spawning new harvester, Target: ' + harvestTarget);
@@ -225,6 +230,11 @@ var creepController = {
             var harvestTarget = null;
             if(roomMem.targetedHarvesting)
                 harvestTarget = this.findHarvestTarget(room);
+
+            if (roomMem.tempRules)
+            {
+                harvestTarget = roomMem.temp1;
+            }
 
             if(OK == hive.spawnCreep(roomMem.producerBody, producerStr + Game.time, 
                 {memory: {role: producerStr, harvestTarget: harvestTarget}}))
